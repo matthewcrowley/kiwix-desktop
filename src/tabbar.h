@@ -1,6 +1,5 @@
 #ifndef TABWIDGET_H
 #define TABWIDGET_H
-
 #include <QTabBar>
 #include <QStackedWidget>
 #include <memory>
@@ -10,7 +9,6 @@
 #include "fullscreenwindow.h"
 #include <QMouseEvent>
 #include <QWebEngineFullScreenRequest>
-
 class TabBar : public QTabBar
 {
     Q_OBJECT
@@ -22,27 +20,25 @@ public:
     };
     TabBar(QWidget* parent=nullptr);
     void setStackedWidget(QStackedWidget* widget);
-
     void     setContentManagerView(ContentManagerView* view);
     void     setNewTabButton(QAction* newTabAction);
     ZimView* createNewTab(bool setCurrent, bool adjacentToCurrentTab);
-
     ZimView* currentZimView() {
-        return qobject_cast<ZimView*>(mp_stackedWidget->currentWidget());
+        if (mp_stackedWidget && mp_stackedWidget->currentWidget()) {
+            return qobject_cast<ZimView*>(mp_stackedWidget->currentWidget());
+        }
+        return nullptr;
     }
-
     WebView* currentWebView() {
-        if (ZimView *zv = currentZimView())
+        if (ZimView* zv = currentZimView())
             return zv->getWebView();
         return nullptr;
     }
-
     void openUrl(const QUrl &url, bool newTab);
-// Redirect call to sub-webView
+    // Redirect call to sub-webView
     void setTitleOf(const QString& title, ZimView* tab=nullptr);
     void setIconOf(const QIcon& icon, ZimView* tab=nullptr);
     QString currentZimId();
-
     void triggerWebPageAction(QWebEnginePage::WebAction action, ZimView* widget=nullptr);
     QString currentArticleUrl();
     QString currentArticleTitle();
@@ -51,18 +47,15 @@ public:
     void closeTabsByZimId(const QString &id);
     QStringList getTabUrls() const;
     QStringList getTabZimIds() const;
-
     // The "+" (new tab) button is implemented as a tab (that is always placed at the end).
     // This function returns the count of real tabs.
     int realTabCount() const;
-
 protected:
     void mousePressEvent(QMouseEvent *event);
     void paintEvent(QPaintEvent *);
     void tabRemoved(int index) override;
     void tabInserted(int index) override;
-    void resizeEvent(QResizeEvent *) override;
-
+    void resizeEvent(QResizeEvent* event) override;
 signals:
     void webActionEnabledChanged(QWebEnginePage::WebAction action, bool enabled);
     void tabDisplayed(TabType tabType);
@@ -70,7 +63,6 @@ signals:
     void tabRemovedSignal(int index);
     void tabInsertedSignal(int index);
     void sizeChanged();
-
 public slots:
     void closeTab(int index);
     void openHomePage();
@@ -81,18 +73,20 @@ public slots:
     void moveToPreviousTab();
     void scrollNextTab();
     void scrollPreviousTab();
-
 private:
     void setCloseTabButton(int index);
-
+    //Trying to add a button for sprint 1
+    //void setUndoCloseTabButton();
+    void createUndoButton();
+    QToolButton* m_undoButton = nullptr;
 private:
     QStackedWidget*     mp_stackedWidget;
     QScopedPointer<FullScreenWindow> m_fullScreenWindow;
-
+    //Trying to add a button for sprint 1
+    QToolButton*       m_undoCloseTabButton;
 private slots:
     void onTabMoved(int from, int to);
     void onCurrentChanged(int index);
     void onWebviewHistoryActionChanged(QWebEnginePage::WebAction action, bool enabled);
 };
-
 #endif // TABWIDGET_H
