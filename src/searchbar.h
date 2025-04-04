@@ -41,8 +41,8 @@ public slots:
     void clearSuggestions();
 
 protected:
-    virtual void focusInEvent(QFocusEvent *);
-    virtual void focusOutEvent(QFocusEvent *);
+    virtual void focusInEvent(QFocusEvent *) override;
+    virtual void focusOutEvent(QFocusEvent *) override;
 private:
     SuggestionListModel m_suggestionModel;
     QTreeView *m_suggestionView;

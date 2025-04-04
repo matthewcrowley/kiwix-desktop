@@ -42,7 +42,7 @@ public:
     void triggerWebPageAction(QWebEnginePage::WebAction action, ZimView* widget=nullptr);
     QString currentArticleUrl();
     QString currentArticleTitle();
-    virtual QSize tabSizeHint(int index) const;
+    virtual QSize tabSizeHint(int index) const override;
     void openFindInPageBar();
     void closeTabsByZimId(const QString &id);
     QStringList getTabUrls() const;
@@ -51,8 +51,8 @@ public:
     // This function returns the count of real tabs.
     int realTabCount() const;
 protected:
-    void mousePressEvent(QMouseEvent *event);
-    void paintEvent(QPaintEvent *);
+    void mousePressEvent(QMouseEvent *event) override;
+    void paintEvent(QPaintEvent *) override;
     void tabRemoved(int index) override;
     void tabInserted(int index) override;
     void resizeEvent(QResizeEvent* event) override;
