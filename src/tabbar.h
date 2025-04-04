@@ -75,15 +75,12 @@ public slots:
     void scrollPreviousTab();
 private:
     void setCloseTabButton(int index);
-    //Trying to add a button for sprint 1
-    //void setUndoCloseTabButton();
     void createUndoButton();
-    QToolButton* m_undoButton = nullptr;
 private:
     QStackedWidget*     mp_stackedWidget;
     QScopedPointer<FullScreenWindow> m_fullScreenWindow;
     //Trying to add a button for sprint 1
-    QToolButton*       m_undoCloseTabButton;
+    QToolButton*       m_undoButton = nullptr;
 private slots:
     void onTabMoved(int from, int to);
     void onCurrentChanged(int index);
