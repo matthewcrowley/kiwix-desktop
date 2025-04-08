@@ -11,6 +11,7 @@ class QMenu;
 #include <QToolTip>
 #include <QCursor>
 #include <QPainter>
+#include <QDebug>
 #define QUITIFNULL(VIEW) if (nullptr==(VIEW)) { return; }
 #define CURRENTIFNULL(VIEW) if(nullptr==VIEW) { VIEW = currentZimView();}
 
@@ -61,6 +62,20 @@ TabBar::TabBar(QWidget *parent) :
     // the slot relies the connection will be direct to reverting back the tab
     connect(this, SIGNAL(tabMoved(int,int)),
             this, SLOT(onTabMoved(int,int)), Qt::DirectConnection);
+
+    //UNDO BUTTON
+    m_undoButton = nullptr;
+    createUndoButton();
+
+    // Show the button if a tab is closed
+    connect(this, &TabBar::tabRemovedSignal, this, [=]() {
+        m_undoButton->setVisible(true);
+
+        //Hide after five seconds
+        QTimer::singleShot(5000, this, [=]() {
+            m_undoButton->setVisible(false);
+        });
+    });
 }
 
 void TabBar::openHomePage() {
@@ -549,3 +564,27 @@ void TabBar::onTabMoved(int from, int to)
 
     KiwixApp::instance()->saveListOfOpenTabs();
 }
+
+void TabBar::createUndoButton()
+{
+    qDebug() << "Creating undo button";
+    m_undoButton = new QToolButton(this);
+    m_undoButton->setObjectName("undoCloseTabButton");
+    m_undoButton->setIcon(QIcon(":icons/undo.svg"));
+    m_undoButton->setToolTip(gt("undo-close-tab"));
+
+    // Button styling
+    m_undoButton->setStyleSheet("background-color: yellow; min-width: 30px; min-height: 30px;");
+    m_undoButton->move(50, 5);
+    m_undoButton->setVisible(true);
+
+    // Position it in a very obvious place
+    m_undoButton->move(10, 5);
+
+    // Connect button click to undo action
+    connect(m_undoButton, &QToolButton::clicked, this, [=]() {
+        qDebug() << "Undo button clicked!";
+    });
+}
+
+
