@@ -32,7 +32,7 @@ This project was developed using a virtual Linux Ubuntu environment.
 ## Documentation
 - [Initial Research](./Documents/InitialResearch.pdf)
 - [User Research](./Documents/UserResearch.pdf)
-- [Sprint 1](./Downloads/Open Source Sorcerers - Sprint 1.pdf)
+- [Sprint 1](./Documents/Open Source Sorcerers - Sprint 1.pdf)
 
 License
 -------
